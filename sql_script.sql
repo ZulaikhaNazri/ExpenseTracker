@@ -66,6 +66,16 @@ CREATE TABLE IF NOT EXISTS users_roles (
   FOREIGN KEY (role_id) REFERENCES role(id)
 ) ENGINE=InnoDB;
 
+INSERT INTO category (id, name) VALUES
+(1, 'groceries'),
+(2, 'Utilities(bills)'),
+(3, 'transportation'),
+(4, 'dining out'),
+(5, 'entertainment'),
+(6, 'shopping'),
+(7, 'travel'),
+(8, 'education');
+
 -- Re-enable checks
 SET FOREIGN_KEY_CHECKS=1;
 SET UNIQUE_CHECKS=1;
