@@ -1,122 +1,71 @@
--- MySQL Workbench Forward Engineering
+-- Disable checks for safe table creation
+SET FOREIGN_KEY_CHECKS=0;
+SET UNIQUE_CHECKS=0;
 
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+-- Create and use database
+CREATE DATABASE IF NOT EXISTS expenses_tracker;
+USE expenses_tracker;
 
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema employee_directory
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema expenses_tracker
--- -----------------------------------------------------
+-- Table: category
+CREATE TABLE IF NOT EXISTS category (
+  id INT NOT NULL,
+  name VARCHAR(255),
+  PRIMARY KEY (id)
+) ENGINE=InnoDB;
 
--- -----------------------------------------------------
--- Schema expenses_tracker
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `expenses_tracker` DEFAULT CHARACTER SET latin1 ;
-USE `expenses_tracker` ;
+-- Table: client
+CREATE TABLE IF NOT EXISTS client (
+  id INT NOT NULL AUTO_INCREMENT,
+  email VARCHAR(255),
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
+  PRIMARY KEY (id)
+) ENGINE=InnoDB AUTO_INCREMENT=9;
 
--- -----------------------------------------------------
--- Table `expenses_tracker`.`category`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `expenses_tracker`.`category` (
-  `id` INT(11) NOT NULL,
-  `name` VARCHAR(255) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
+-- Table: expense
+CREATE TABLE IF NOT EXISTS expense (
+  id INT NOT NULL AUTO_INCREMENT,
+  amount INT,
+  date_time VARCHAR(255),
+  description VARCHAR(400),
+  category_id INT,
+  client_id INT,
+  PRIMARY KEY (id),
+  INDEX (category_id),
+  INDEX (client_id),
+  FOREIGN KEY (category_id) REFERENCES category(id),
+  FOREIGN KEY (client_id) REFERENCES client(id)
+) ENGINE=InnoDB AUTO_INCREMENT=16;
 
+-- Table: role
+CREATE TABLE IF NOT EXISTS role (
+  id INT NOT NULL,
+  name VARCHAR(255),
+  PRIMARY KEY (id)
+) ENGINE=InnoDB;
 
--- -----------------------------------------------------
--- Table `expenses_tracker`.`client`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `expenses_tracker`.`client` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(255) NULL DEFAULT NULL,
-  `first_name` VARCHAR(255) NULL DEFAULT NULL,
-  `last_name` VARCHAR(255) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-AUTO_INCREMENT = 9
-DEFAULT CHARACTER SET = latin1;
+-- Table: user
+CREATE TABLE IF NOT EXISTS user (
+  id INT NOT NULL AUTO_INCREMENT,
+  password VARCHAR(255),
+  user_name VARCHAR(255),
+  client_id INT,
+  enabled BIT,
+  PRIMARY KEY (id),
+  UNIQUE KEY (client_id),
+  FOREIGN KEY (client_id) REFERENCES client(id)
+) ENGINE=InnoDB AUTO_INCREMENT=9;
 
+-- Table: users_roles
+CREATE TABLE IF NOT EXISTS users_roles (
+  user_id INT NOT NULL,
+  role_id INT NOT NULL,
+  INDEX (role_id),
+  INDEX (user_id),
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (role_id) REFERENCES role(id)
+) ENGINE=InnoDB;
 
--- -----------------------------------------------------
--- Table `expenses_tracker`.`expense`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `expenses_tracker`.`expense` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `amount` INT(11) NULL DEFAULT NULL,
-  `date_time` VARCHAR(255) NULL DEFAULT NULL,
-  `description` VARCHAR(400) NULL DEFAULT NULL,
-  `category_id` INT(11) NULL DEFAULT NULL,
-  `client_id` INT(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `FKmvjm59reb5i075vu38bwcaqj6` (`category_id` ASC) VISIBLE,
-  INDEX `FKq0le09a1upxs1ctbr5mpoltep` (`client_id` ASC) VISIBLE,
-  CONSTRAINT `FKmvjm59reb5i075vu38bwcaqj6`
-    FOREIGN KEY (`category_id`)
-    REFERENCES `expenses_tracker`.`category` (`id`),
-  CONSTRAINT `FKq0le09a1upxs1ctbr5mpoltep`
-    FOREIGN KEY (`client_id`)
-    REFERENCES `expenses_tracker`.`client` (`id`))
-ENGINE = InnoDB
-AUTO_INCREMENT = 16
-DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
--- Table `expenses_tracker`.`role`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `expenses_tracker`.`role` (
-  `id` INT(11) NOT NULL,
-  `name` VARCHAR(255) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
--- Table `expenses_tracker`.`user`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `expenses_tracker`.`user` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `password` VARCHAR(255) NULL DEFAULT NULL,
-  `user_name` VARCHAR(255) NULL DEFAULT NULL,
-  `client_id` INT(11) NULL DEFAULT NULL,
-  `enabled` BIT(1) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `UK_rb7eox526ilbewv2wuv5bnsrt` (`client_id` ASC) VISIBLE,
-  CONSTRAINT `FKrl8au09hfjd9742b89li2rb3`
-    FOREIGN KEY (`client_id`)
-    REFERENCES `expenses_tracker`.`client` (`id`))
-ENGINE = InnoDB
-AUTO_INCREMENT = 9
-DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
--- Table `expenses_tracker`.`users_roles`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `expenses_tracker`.`users_roles` (
-  `user_id` INT(11) NOT NULL,
-  `role_id` INT(11) NOT NULL,
-  INDEX `FKt4v0rrweyk393bdgt107vdx0x` (`role_id` ASC) VISIBLE,
-  INDEX `FKgd3iendaoyh04b95ykqise6qh` (`user_id` ASC) VISIBLE,
-  CONSTRAINT `FKgd3iendaoyh04b95ykqise6qh`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `expenses_tracker`.`user` (`id`),
-  CONSTRAINT `FKt4v0rrweyk393bdgt107vdx0x`
-    FOREIGN KEY (`role_id`)
-    REFERENCES `expenses_tracker`.`role` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
-
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- Re-enable checks
+SET FOREIGN_KEY_CHECKS=1;
+SET UNIQUE_CHECKS=1;
