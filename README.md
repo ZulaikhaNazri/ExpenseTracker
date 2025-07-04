@@ -3,7 +3,7 @@
 `git clone https://github.com/your-username/expenses-tracker.git`
 
 
-setup mysql database and update dekat application.properties
+setup mysql database and update user detail dekat application.properties
 
 
 mvn clean install
