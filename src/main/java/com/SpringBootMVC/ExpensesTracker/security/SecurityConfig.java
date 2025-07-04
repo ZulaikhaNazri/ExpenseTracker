@@ -26,7 +26,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     } 
     
-
     // 👇 In-memory user service for API
     @Bean
     public UserDetailsService apiUserDetailsService() {
@@ -47,7 +46,7 @@ public class SecurityConfig {
         return auth;
     }
 
-    // 👇 Authentication provider for WEB UI (uses database)
+    // 👇 Authentication provider for WEB User Interface (uses database)
     @Bean
     public DaoAuthenticationProvider webAuthenticationProvider(UserService userService) {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
