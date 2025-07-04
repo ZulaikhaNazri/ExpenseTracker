@@ -15,5 +15,5 @@ run `java -jar target/expenses-tracker.jar`. @ guna ide
 Open your web browser and navigate to `http://localhost:9090`.
 
 
-RESTAPI kena ada basic
+RESTAPI kena ada basic auth
 
