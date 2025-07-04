@@ -1,6 +1,6 @@
 
 
-`git clone https://github.com/your-username/expenses-tracker.git`
+`git clone https://github.com/ZulaikhaNazri/ExpenseTracker.git`
 
 
 setup mysql database and update user detail dekat application.properties
