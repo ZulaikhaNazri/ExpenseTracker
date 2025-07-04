@@ -24,7 +24,8 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    } 
+    
 
     // 👇 In-memory user service for API
     @Bean
