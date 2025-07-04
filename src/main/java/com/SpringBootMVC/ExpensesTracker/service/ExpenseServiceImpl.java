@@ -3,6 +3,7 @@ package com.SpringBootMVC.ExpensesTracker.service;
 import com.SpringBootMVC.ExpensesTracker.DTO.ExpenseDTO;
 import com.SpringBootMVC.ExpensesTracker.DTO.FilterDTO;
 import com.SpringBootMVC.ExpensesTracker.entity.Category;
+import com.SpringBootMVC.ExpensesTracker.entity.Client;
 import com.SpringBootMVC.ExpensesTracker.entity.Expense;
 import com.SpringBootMVC.ExpensesTracker.repository.ExpenseRepository;
 import jakarta.persistence.EntityManager;
@@ -43,8 +44,15 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setAmount(expenseDTO.getAmount());
         expense.setDateTime(expenseDTO.getDateTime());
         expense.setDescription(expenseDTO.getDescription());
-        expense.setClient(clientService.findClientById(expenseDTO.getClientId()));
+        Client client = clientService.findClientById(expenseDTO.getClientId());
+        if (client == null) {
+            throw new IllegalArgumentException("Client not found with id: " + expenseDTO.getClientId());
+        }
+        expense.setClient(client);
         Category category = categoryService.findCategoryByName(expenseDTO.getCategory());
+        if(category == null) {
+            throw new IllegalArgumentException("Category not found with name: " + expenseDTO.getCategory());
+        }
         expense.setCategory(category);
         expenseRepository.save(expense);
     }
